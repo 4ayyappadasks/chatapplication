@@ -74,9 +74,8 @@ class chatcard extends StatelessWidget {
                           Icons.circle,
                           color: messageactivecolor,
                         )
-                      : Text(Datechanging.Getformated_Date(
-                              context: context, time: messages?.sent ?? "") ??
-                          "no time available"),
+                      : Text(Datechanging.getLastMessagetime(
+                          context: context, time: messages?.sent ?? "")),
               // Text(
               //     "${DateTime.fromMillisecondsSinceEpoch(int.parse(user.createdAt))}"),
               title: Text(
