@@ -16,7 +16,6 @@ class Messages {
 
   Messages.fromJson(Map<String, dynamic> json) {
     msg = json['msg'].toString();
-    ;
     toid = json['toid'].toString();
     read = json['read'].toString();
     type = json['type'].toString() == Type.image ? Type.image : Type.text;
@@ -29,7 +28,7 @@ class Messages {
     data['msg'] = msg;
     data['toid'] = toid;
     data['read'] = read;
-    data['type'] = type;
+    data['type'] = type.name;
     data['sent'] = sent;
     data['fromid'] = fromid;
     return data;

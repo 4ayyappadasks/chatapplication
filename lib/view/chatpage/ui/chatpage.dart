@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chatapplication/model/chatpage/chatpagemodel.dart';
 import 'package:chatapplication/view/chatpage/controller.dart';
+import 'package:chatapplication/view/chatpage/widgets/messagecard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,8 +17,8 @@ import '../../homepage/ui/homepage.dart';
 
 class Chatpage extends StatelessWidget {
   final Chatusers user;
-  const Chatpage({super.key, required this.user});
-
+  Chatpage({super.key, required this.user});
+  final msg = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(Chatcontroller());
@@ -74,19 +76,22 @@ class Chatpage extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: Apis.GetAllmessages(),
+              stream: Apis.GetAllmessages(user),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                  // return Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   case ConnectionState.active:
                   case ConnectionState.done:
                     final data = snapshot.data?.docs;
-                    log("message${jsonEncode(data?[0].data())}");
-                    // controller.List.value =
-                    //     data?.map((e) => Chatusers.fromJson(e.data())).toList() ??
-                    //         [];
+                    if (data!.isNotEmpty) {
+                      log("message${jsonEncode(data?[0].data())}");
+                    }
+                    controller.List.value = data
+                            ?.map((e) => Messages.fromJson(e.data()))
+                            .toList() ??
+                        [];
                     if (controller.List.value.isNotEmpty) {
                       return Obx(() => ListView.builder(
                             padding: EdgeInsets.only(top: 15),
@@ -98,8 +103,9 @@ class Chatpage extends StatelessWidget {
                                 //       user: controller.List[index],
                                 //     ));
                               },
-                              child:
-                                  Text("name${controller.List.value[index]}"),
+                              child: MessageCard(
+                                message: controller.List[index],
+                              ),
                             ),
                           ));
                     } else {
@@ -129,6 +135,7 @@ class Chatpage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      controller: msg,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
@@ -144,7 +151,14 @@ class Chatpage extends StatelessWidget {
                 IconButton(onPressed: () {}, icon: Icon(Icons.image)),
                 IconButton(onPressed: () {}, icon: Icon(CupertinoIcons.camera)),
                 CircleAvatar(
-                  child: IconButton(onPressed: () {}, icon: Icon(Icons.send)),
+                  child: IconButton(
+                      onPressed: () {
+                        if (msg.text.isNotEmpty) {
+                          Apis.sendmessages(user, msg.text);
+                          msg.text = "";
+                        }
+                      },
+                      icon: Icon(Icons.send)),
                 )
               ],
             ),

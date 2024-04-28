@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chatapplication/model/chatpage/chatpagemodel.dart';
 import 'package:chatapplication/model/homepage/homepagemodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +51,8 @@ class Apis {
         about: "using a chat",
         isOnline: false,
         lastActive: time,
-        pushToken: "");
+        pushToken: "",
+        isActive: 'yes');
     return (await firestore
         .collection("user")
         .doc(user.uid)
@@ -94,8 +97,53 @@ class Apis {
     }
   }
 
-  /// get all messages
-  static Stream<QuerySnapshot<Map<String, dynamic>>> GetAllmessages() {
-    return firestore.collection('messages').snapshots();
+  ///****************************** chatting ****************************///
+
+  static String getConverstioniD(String id) => user.uid.hashCode <= id.hashCode
+      ? "${user.uid}_${id}"
+      : "${id}_${user.uid}";
+
+  /// get all messages(read received messages)
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> GetAllmessages(
+      Chatusers user) {
+    return firestore
+        .collection('chats/${getConverstioniD(user.id)}/messages/')
+        .snapshots();
+  }
+
+  /// send messages
+  static Future<void> sendmessages(Chatusers chatuser, String msg) async {
+    log("message${msg},chatuser${jsonEncode(chatuser)},,${Type.text}");
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final Messages message = Messages(
+        msg: msg,
+        toid: "${chatuser.id}",
+        read: "",
+        type: Type.text,
+        sent: time,
+        fromid: user.uid);
+    final ref = firestore
+        .collection('chats/${getConverstioniD(chatuser.id)}/messages/');
+    await ref.doc(time).set(message.toJson());
+  }
+
+  /// read messaged
+
+  static Future<void> updatemessagestatus(Messages messages) async {
+    firestore
+        .collection('chats/${getConverstioniD(messages.fromid)}/messages/')
+        .doc(messages.sent)
+        .update({"read": DateTime.now().millisecondsSinceEpoch.toString()});
+  }
+
+  /// get last messages
+  static Stream<QuerySnapshot<Map<String, dynamic>>> GetLastmessages(
+      Chatusers user) {
+    return firestore
+        .collection('chats/${getConverstioniD(user.id)}/messages/')
+        .orderBy("sent", descending: true)
+        .limit(1)
+        .snapshots();
   }
 }
