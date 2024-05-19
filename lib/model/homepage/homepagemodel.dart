@@ -60,28 +60,28 @@
 //       };
 // }
 class Chatusers {
-  late final String image;
-  late final String pushToken;
+  String? image;
+  String? pushToken;
   String? isActive;
-  late final String about;
-  late final String name;
-  late final String createdAt;
-  late final bool isOnline;
-  late final String lastActive;
-  late final String id;
-  late final String email;
+  String? about;
+  String? name;
+  String? createdAt;
+  bool? isOnline;
+  String? lastActive;
+  String? id;
+  String? email;
 
   Chatusers(
-      {required this.image,
-      required this.pushToken,
-      required this.isActive,
-      required this.about,
-      required this.name,
-      required this.createdAt,
-      required this.isOnline,
-      required this.lastActive,
-      required this.id,
-      required this.email});
+      {this.image,
+      this.pushToken,
+      this.isActive,
+      this.about,
+      this.name,
+      this.createdAt,
+      this.isOnline,
+      this.lastActive,
+      this.id,
+      this.email});
 
   Chatusers.fromJson(Map<String, dynamic> json) {
     image = json['image'];

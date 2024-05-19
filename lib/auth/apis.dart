@@ -51,8 +51,7 @@ class Apis {
         about: "using a chat",
         isOnline: false,
         lastActive: time,
-        pushToken: "",
-        isActive: 'yes');
+        pushToken: "");
     return (await firestore
         .collection("user")
         .doc(user.uid)
@@ -108,7 +107,7 @@ class Apis {
   static Stream<QuerySnapshot<Map<String, dynamic>>> GetAllmessages(
       Chatusers user) {
     return firestore
-        .collection('chats/${getConverstioniD(user.id)}/messages/')
+        .collection('chats/${getConverstioniD("${user.id}")}/messages/')
         .snapshots();
   }
 
@@ -124,7 +123,7 @@ class Apis {
         sent: time,
         fromid: user.uid);
     final ref = firestore
-        .collection('chats/${getConverstioniD(chatuser.id)}/messages/');
+        .collection('chats/${getConverstioniD("${chatuser.id}")}/messages/');
     await ref.doc(time).set(message.toJson());
   }
 
@@ -141,7 +140,7 @@ class Apis {
   static Stream<QuerySnapshot<Map<String, dynamic>>> GetLastmessages(
       Chatusers user) {
     return firestore
-        .collection('chats/${getConverstioniD(user.id)}/messages/')
+        .collection('chats/${getConverstioniD("${user.id}")}/messages/c')
         .orderBy("sent", descending: true)
         .limit(1)
         .snapshots();

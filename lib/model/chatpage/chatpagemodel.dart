@@ -18,7 +18,7 @@ class Messages {
     msg = json['msg'].toString();
     toid = json['toid'].toString();
     read = json['read'].toString();
-    type = json['type'].toString() == Type.image ? Type.image : Type.text;
+    type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
     sent = json['sent'].toString();
     fromid = json['fromid'].toString();
   }
