@@ -145,4 +145,7 @@ class Apis {
         .limit(1)
         .snapshots();
   }
+
+  /// send chat image
+  static Future<void> Sendchatimage(Chatusers chatusers, File file) async {}
 }
