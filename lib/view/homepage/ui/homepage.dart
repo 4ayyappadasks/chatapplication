@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:chatapplication/auth/apis.dart';
 import 'package:chatapplication/color/Color.dart';
 import 'package:chatapplication/commonwidgets/ChatCard/chatcard.dart';
-import 'package:chatapplication/commonwidgets/widgets.dart';
 import 'package:chatapplication/model/homepage/homepagemodel.dart';
 import 'package:chatapplication/view/chatpage/ui/chatpage.dart';
 import 'package:chatapplication/view/homepage/controller/homepagecontroller.dart';
@@ -100,45 +99,46 @@ class homepage extends StatelessWidget {
                         itemCount: controller.issearching.value == true
                             ? controller.SearchList.length
                             : controller.List.length,
-                        itemBuilder: (context, index) => controller
-                                    .issearching.value ==
-                                true
-                            ? GestureDetector(
-                                onTap: () {
-                                  Get.off(() => Chatpage(
-                                        user: controller.SearchList[index],
-                                      ));
-                                },
-                                child: chatcard(
-                                  username:
-                                      "${controller.SearchList[index].name}",
-                                  description:
-                                      "${controller.SearchList[index].about}",
-                                  time:
-                                      "${controller.SearchList[index].createdAt}",
-                                  imageurl: controller
-                                              .SearchList[index].image ==
-                                          ""
-                                      ? Commonwidgets.imageurl
-                                      : "${controller.SearchList[index].image}",
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  Get.off(() => Chatpage(
-                                        user: controller.List[index],
-                                      ));
-                                },
-                                child: chatcard(
-                                  username: "${controller.List[index].name}",
-                                  description:
-                                      "${controller.List[index].about}",
-                                  time: "${controller.List[index].createdAt}",
-                                  imageurl: controller.List[index].image == ""
-                                      ? Commonwidgets.imageurl
-                                      : "${controller.List[index].image}",
-                                ),
-                              ),
+                        itemBuilder: (context, index) =>
+                            controller.issearching.value == true
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Get.off(() => Chatpage(
+                                            user: controller.SearchList[index],
+                                          ));
+                                    },
+                                    child: chatcard(
+                                      user: controller.SearchList[index],
+                                      // username:
+                                      //     "${controller.SearchList[index].name}",
+                                      // description:
+                                      //     "${controller.SearchList[index].about}",
+                                      // time:
+                                      //     "${controller.SearchList[index].createdAt}",
+                                      // imageurl: controller
+                                      //             .SearchList[index].image ==
+                                      //         ""
+                                      //     ? Commonwidgets.imageurl
+                                      //     : "${controller.SearchList[index].image}",
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      Get.off(() => Chatpage(
+                                            user: controller.List[index],
+                                          ));
+                                    },
+                                    child: chatcard(
+                                      user: controller.List[index],
+                                      // username: "${controller.List[index].name}",
+                                      // description:
+                                      //     "${controller.List[index].about}",
+                                      // time: "${controller.List[index].createdAt}",
+                                      // imageurl: controller.List[index].image == ""
+                                      //     ? Commonwidgets.imageurl
+                                      //     : "${controller.List[index].image}",
+                                    ),
+                                  ),
                       ));
                 } else {
                   return Center(child: Text("No data found"));

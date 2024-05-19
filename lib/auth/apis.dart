@@ -140,7 +140,7 @@ class Apis {
   static Stream<QuerySnapshot<Map<String, dynamic>>> GetLastmessages(
       Chatusers user) {
     return firestore
-        .collection('chats/${getConverstioniD("${user.id}")}/messages/c')
+        .collection('chats/${getConverstioniD("${user.id}")}/messages/')
         .orderBy("sent", descending: true)
         .limit(1)
         .snapshots();
