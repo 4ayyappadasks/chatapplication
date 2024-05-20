@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapplication/auth/apis.dart';
 import 'package:chatapplication/color/Color.dart';
 import 'package:chatapplication/commonwidgets/time/date_changing.dart';
@@ -29,8 +30,12 @@ class MessageCard extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            margin: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 15),
-            padding: EdgeInsets.all(15),
+            margin: message.type == Type.text
+                ? EdgeInsets.only(left: 10, top: 15, bottom: 15, right: 15)
+                : EdgeInsets.all(5),
+            padding: message.type == Type.text
+                ? EdgeInsets.all(15)
+                : EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: messagerecivecolor,
                 borderRadius: BorderRadius.only(
@@ -38,10 +43,30 @@ class MessageCard extends StatelessWidget {
                   bottomRight: Radius.circular(20),
                   topLeft: Radius.circular(20),
                 )),
-            child: Text(
-              "${message.msg}",
-              style: TextStyle(color: whiteColor),
-            ),
+            child: message.type == Type.text
+                ? Text(
+                    "${message.msg}",
+                    style: TextStyle(color: whiteColor),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: message.msg,
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: MediaQuery.of(context).size.height * .2,
+                      width: MediaQuery.of(context).size.width * .5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.contain),
+                      ),
+                    ),
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Center(child: Icon(Icons.error)),
+                  ),
           ),
         ),
         Padding(
@@ -79,8 +104,12 @@ class MessageCard extends StatelessWidget {
         Spacer(),
         Flexible(
           child: Container(
-            margin: EdgeInsets.only(left: 10, top: 15, bottom: 15, right: 15),
-            padding: EdgeInsets.all(15),
+            margin: message.type == Type.text
+                ? EdgeInsets.only(left: 10, top: 15, bottom: 15, right: 15)
+                : EdgeInsets.all(5),
+            padding: message.type == Type.text
+                ? EdgeInsets.all(15)
+                : EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: messagesentcolor,
                 borderRadius: BorderRadius.only(
@@ -88,11 +117,30 @@ class MessageCard extends StatelessWidget {
                   bottomLeft: Radius.circular(20),
                   topLeft: Radius.circular(20),
                 )),
-            child: Text(
-              maxLines: null,
-              "${message.msg}",
-              style: TextStyle(color: whiteColor),
-            ),
+            child: message.type == Type.text
+                ? Text(
+                    "${message.msg}",
+                    style: TextStyle(color: whiteColor),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: message.msg,
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: MediaQuery.of(context).size.height * .2,
+                      width: MediaQuery.of(context).size.width * .5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.contain),
+                      ),
+                    ),
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Center(child: Icon(Icons.error)),
+                  ),
           ),
         ),
       ],

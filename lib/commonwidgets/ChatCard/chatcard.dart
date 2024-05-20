@@ -86,10 +86,14 @@ class chatcard extends StatelessWidget {
                 user.name ?? "User name",
                 style: TextStyle(color: Colors.black38),
               ),
-              subtitle: Text(
-                messages?.msg ?? user.about ?? "",
-                maxLines: 1,
-              ),
+              subtitle: messages?.msg == null || messages?.type == Type.text
+                  ? Text(
+                      messages?.msg ?? user.about ?? "",
+                      maxLines: 1,
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: Icon(Icons.image)),
             );
           },
         ),

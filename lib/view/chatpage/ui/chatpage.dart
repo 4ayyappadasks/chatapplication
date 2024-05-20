@@ -234,12 +234,15 @@ class Chatpage extends StatelessWidget {
                     ),
                     IconButton(onPressed: () {}, icon: Icon(Icons.image)),
                     IconButton(
-                        onPressed: () {}, icon: Icon(CupertinoIcons.camera)),
+                        onPressed: () {
+                          controller.pickimageusingcam(context, user);
+                        },
+                        icon: Icon(CupertinoIcons.camera)),
                     CircleAvatar(
                       child: IconButton(
                           onPressed: () {
                             if (msg.text.isNotEmpty) {
-                              Apis.sendmessages(user, msg.text);
+                              Apis.sendmessages(user, msg.text, Type.text);
                               msg.text = "";
                             }
                           },

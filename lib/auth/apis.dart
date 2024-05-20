@@ -112,14 +112,15 @@ class Apis {
   }
 
   /// send messages
-  static Future<void> sendmessages(Chatusers chatuser, String msg) async {
+  static Future<void> sendmessages(
+      Chatusers chatuser, String msg, Type type) async {
     log("message${msg},chatuser${jsonEncode(chatuser)},,${Type.text}");
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final Messages message = Messages(
         msg: msg,
         toid: "${chatuser.id}",
         read: "",
-        type: Type.text,
+        type: type,
         sent: time,
         fromid: user.uid);
     final ref = firestore
@@ -147,5 +148,22 @@ class Apis {
   }
 
   /// send chat image
-  static Future<void> Sendchatimage(Chatusers chatusers, File file) async {}
+  static Future<void> Sendchatimage(Chatusers chatusers, File file) async {
+    try {
+      final ext = file.path.split(".").last;
+      log("saved extention ${ext}");
+      log("images arrived for changing ${file}");
+      final ref = Storage.ref().child(
+          "images/${getConverstioniD("${chatusers.id}")}/${DateTime.now().millisecondsSinceEpoch}.${ext}");
+      await ref
+          .putFile(file, SettableMetadata(contentType: "images/${ext}"))
+          .then((p0) {
+        log("data transfer ${p0.bytesTransferred / 1000} kb");
+      });
+      final imageurl = await ref.getDownloadURL();
+      await sendmessages(chatusers, imageurl, Type.image);
+    } catch (e) {
+      log("error in profile update ${e}");
+    }
+  }
 }
