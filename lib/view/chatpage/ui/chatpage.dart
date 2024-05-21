@@ -163,15 +163,15 @@ class Chatpage extends StatelessWidget {
                       case ConnectionState.done:
                         final data = snapshot.data?.docs;
                         //   log("message${jsonEncode(data?[0].data())}");
-                        controller.List.value = data
+                        controller.Lists.value = data
                                 ?.map((e) => Messages.fromJson(e.data()))
                                 .toList() ??
                             [];
-                        if (controller.List.value.isNotEmpty) {
+                        if (controller.Lists.value.isNotEmpty) {
                           return Obx(() => ListView.builder(
                                 padding: EdgeInsets.only(top: 15),
                                 physics: BouncingScrollPhysics(),
-                                itemCount: controller.List.length,
+                                itemCount: controller.Lists.length,
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
                                   onTap: () {
@@ -180,9 +180,10 @@ class Chatpage extends StatelessWidget {
                                     //     ));
                                   },
                                   child: MessageCard(
-                                    message: controller.List[index],
+                                    message: controller.Lists[index],
                                   ),
                                 ),
+                                reverse: true,
                               ));
                         } else {
                           return Center(
@@ -199,6 +200,17 @@ class Chatpage extends StatelessWidget {
                   },
                 ),
               ),
+              Obx(() {
+                return controller.isuploading.value == true
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          child: CircularProgressIndicator(),
+                          alignment: Alignment.bottomRight,
+                        ),
+                      )
+                    : SizedBox();
+              }),
               Card(
                 elevation: 5,
                 margin: EdgeInsets.only(right: 10, left: 10, top: 10),
@@ -232,7 +244,11 @@ class Chatpage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.image)),
+                    IconButton(
+                        onPressed: () {
+                          controller.pickImageFromGallery(context, user);
+                        },
+                        icon: Icon(Icons.image)),
                     IconButton(
                         onPressed: () {
                           controller.pickimageusingcam(context, user);
