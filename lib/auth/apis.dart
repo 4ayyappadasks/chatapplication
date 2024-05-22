@@ -167,4 +167,22 @@ class Apis {
       log("error in profile update ${e}");
     }
   }
+
+  /// getuser info
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getuserinfo(
+      Chatusers user) {
+    return firestore
+        .collection('user')
+        .where("id", isEqualTo: user.id)
+        .snapshots();
+  }
+
+  /// update online and offline
+  static Future<void> updateonlineststus(bool isonline) async {
+    firestore.collection('user').doc(user.uid).update({
+      "is_online": isonline,
+      "last_active": DateTime.now().millisecondsSinceEpoch.toString()
+    });
+  }
 }

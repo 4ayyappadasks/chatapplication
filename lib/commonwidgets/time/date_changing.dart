@@ -19,6 +19,26 @@ class Datechanging {
     return "${sent.day}  ${getmonth(sent)}";
   }
 
+  static String getlastactivetime(
+      {required BuildContext context, required String lastactive}) {
+    final int i = int.tryParse(lastactive) ?? -1;
+    if (i == -1) return "last seen not available";
+    DateTime time = DateTime.fromMillisecondsSinceEpoch(i);
+    DateTime now = DateTime.now();
+
+    String formateditime = TimeOfDay.fromDateTime(time).format(context);
+    if (time.day == time.day &&
+        time.month == time.month &&
+        time.year == time.year) {
+      return "lastseen seen today ${formateditime}";
+    }
+    if ((now.difference(time).inHours / 24).round() == 1) {
+      return "last seen yesterday at ${formateditime}";
+    }
+    String month = getmonth(time);
+    return "last seen on ${time.day}$month on ${formateditime}";
+  }
+
   static getmonth(DateTime date) {
     switch (date.month) {
       case 1:

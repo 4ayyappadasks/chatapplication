@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:chatapplication/auth/apis.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../model/homepage/homepagemodel.dart';
@@ -15,6 +18,17 @@ class HomepageController extends GetxController {
   @override
   void onInit() {
     Apis.getselfinfo();
+    Apis.updateonlineststus(true);
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log("message of ${message}");
+      if (message.toString().contains("paused")) {
+        Apis.updateonlineststus(false);
+      }
+      if (message.toString().contains("resumed")) {
+        Apis.updateonlineststus(true);
+      }
+      return Future.value(message);
+    });
     super.onInit();
   }
 }
