@@ -8,7 +8,9 @@ class Datechanging {
   }
 
   static String getLastMessagetime(
-      {required BuildContext context, required String time}) {
+      {required BuildContext context,
+      required String time,
+      bool showyear = false}) {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
     if (now.day == sent.day &&
@@ -16,7 +18,9 @@ class Datechanging {
         now.year == sent.year) {
       return TimeOfDay.fromDateTime(sent).format(context);
     }
-    return "${sent.day}  ${getmonth(sent)}";
+    return showyear
+        ? "${sent.day}  ${getmonth(sent)}  ${sent.year}"
+        : "${sent.day}  ${getmonth(sent)}";
   }
 
   static String getlastactivetime(
@@ -27,10 +31,10 @@ class Datechanging {
     DateTime now = DateTime.now();
 
     String formateditime = TimeOfDay.fromDateTime(time).format(context);
-    if (time.day == time.day &&
-        time.month == time.month &&
+    if (time.day == now.day &&
+        time.month == now.month &&
         time.year == time.year) {
-      return "lastseen seen today ${formateditime}";
+      return "last seen seen today ${formateditime}";
     }
     if ((now.difference(time).inHours / 24).round() == 1) {
       return "last seen yesterday at ${formateditime}";

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapplication/commonwidgets/time/date_changing.dart';
 import 'package:chatapplication/model/chatpage/chatpagemodel.dart';
 import 'package:chatapplication/view/chatpage/controller.dart';
+import 'package:chatapplication/view/chatpage/ui/userprofilescreen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -43,83 +44,89 @@ class Chatpage extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size(
                 double.infinity, MediaQuery.of(context).size.height * 0.08),
-            child: StreamBuilder(
-              stream: Apis.getuserinfo(user),
-              builder: (context, snapshot) {
-                final data = snapshot.data?.docs;
-                final list =
-                    data?.map((e) => Chatusers.fromJson(e.data())).toList() ??
-                        [];
-                return Container(
-                  padding: EdgeInsets.only(top: 10),
-                  color: primaryColor, // Replace with your primaryColor
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            Get.off(() => homepage(),
-                                transition: Transition.fade);
-                          },
-                          icon: Icon(
-                            CupertinoIcons.back,
-                            color: Colors.white,
+            child: GestureDetector(
+              onTap: () {
+                Get.off(() => chatuserProfilescreen(user: user));
+              },
+              child: StreamBuilder(
+                stream: Apis.getuserinfo(user),
+                builder: (context, snapshot) {
+                  final data = snapshot.data?.docs;
+                  final list =
+                      data?.map((e) => Chatusers.fromJson(e.data())).toList() ??
+                          [];
+                  return Container(
+                    padding: EdgeInsets.only(top: 10),
+                    color: primaryColor, // Replace with your primaryColor
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            onPressed: () {
+                              Get.off(() => homepage(),
+                                  transition: Transition.fade);
+                            },
+                            icon: Icon(
+                              CupertinoIcons.back,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: list.isNotEmpty
-                                  ? CachedNetworkImageProvider(
-                                      list[0].image ?? "")
-                                  : CachedNetworkImageProvider(
-                                      user.image ?? ""),
-                              onBackgroundImageError: (exception, stackTrace) {
-                                // Handle image error
-                              },
-                            ),
-                            SizedBox(
-                                width:
-                                    8), // Adjust the space between avatar and text
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  list.isNotEmpty
-                                      ? "${list[0].name}"
-                                      : "${user.name}",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  (list.isNotEmpty)
-                                      ? (list[0].isOnline!)
-                                          ? "Online"
-                                          : Datechanging.getlastactivetime(
-                                              context: context,
-                                              lastactive:
-                                                  "${list[0].lastActive}")
-                                      : Datechanging.getlastactivetime(
-                                          context: context,
-                                          lastactive: "${user.lastActive}"),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: list.isNotEmpty
+                                    ? CachedNetworkImageProvider(
+                                        list[0].image ?? "")
+                                    : CachedNetworkImageProvider(
+                                        user.image ?? ""),
+                                onBackgroundImageError:
+                                    (exception, stackTrace) {
+                                  // Handle image error
+                                },
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Adjust the space between avatar and text
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    list.isNotEmpty
+                                        ? "${list[0].name}"
+                                        : "${user.name}",
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Text(
+                                    (list.isNotEmpty)
+                                        ? (list[0].isOnline!)
+                                            ? "Online"
+                                            : Datechanging.getlastactivetime(
+                                                context: context,
+                                                lastactive:
+                                                    "${list[0].lastActive}")
+                                        : Datechanging.getlastactivetime(
+                                            context: context,
+                                            lastactive: "${user.lastActive}"),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
 

@@ -344,6 +344,7 @@ class Profilescreen extends StatelessWidget {
                         [
                           ElevatedButton(
                               onPressed: () async {
+                                await Apis.updateonlineststus(false);
                                 await FirebaseAuth.instance.signOut();
                                 await GoogleSignIn().signOut();
                                 Commonwidgets.GetSnackbar(
@@ -355,6 +356,7 @@ class Profilescreen extends StatelessWidget {
                                     context);
                                 Get.off(() => loginpage(),
                                     transition: Transition.upToDown);
+                                Apis.auth = FirebaseAuth.instance;
                               },
                               child: Text("yes")),
                           ElevatedButton(

@@ -21,11 +21,14 @@ class HomepageController extends GetxController {
     Apis.updateonlineststus(true);
     SystemChannels.lifecycle.setMessageHandler((message) {
       log("message of ${message}");
-      if (message.toString().contains("paused")) {
-        Apis.updateonlineststus(false);
-      }
-      if (message.toString().contains("resumed")) {
-        Apis.updateonlineststus(true);
+      log("res${Apis.auth.currentUser}");
+      if (Apis.auth.currentUser != null) {
+        if (message.toString().contains("paused")) {
+          Apis.updateonlineststus(false);
+        }
+        if (message.toString().contains("resumed")) {
+          Apis.updateonlineststus(true);
+        }
       }
       return Future.value(message);
     });

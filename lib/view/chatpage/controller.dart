@@ -26,6 +26,7 @@ class Chatcontroller extends GetxController {
   ///camera
   pickimageusingcam(BuildContext context, Chatusers chatusers) async {
     try {
+      isuploading.value = true;
       final XFile? pickedImage = await ImagePicker()
           .pickImage(source: ImageSource.camera, imageQuality: 80);
 
@@ -34,7 +35,9 @@ class Chatcontroller extends GetxController {
         selectedFileName.value = selectedFile.path.split('/').last;
         File file = File(selectedFile.path);
         print('Image: $selectedFileName');
-        Apis.Sendchatimage(chatusers, file);
+        Apis.Sendchatimage(chatusers, file).then((value) {
+          isuploading.value = false;
+        });
         // Commonwidgets.Getalertbox(
         //     "image",
         //     whiteColor,
@@ -47,9 +50,11 @@ class Chatcontroller extends GetxController {
         //     Image.file(file));
       } else {
         print('No image selected');
+        isuploading.value = false;
       }
     } catch (e) {
       print('Error picking image: $e');
+      isuploading.value = false;
     }
   }
 
