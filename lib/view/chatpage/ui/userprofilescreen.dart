@@ -2,16 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapplication/auth/apis.dart';
 import 'package:chatapplication/commonwidgets/time/date_changing.dart';
 import 'package:chatapplication/model/homepage/homepagemodel.dart';
-import 'package:chatapplication/view/homepage/ui/homepage.dart';
 import 'package:chatapplication/view/profilescreen/controller/profilecontroller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../color/Color.dart';
+import 'chatpage.dart';
 
 class chatuserProfilescreen extends StatelessWidget {
   final Chatusers user;
-  chatuserProfilescreen({super.key, required this.user});
+  final i;
+  chatuserProfilescreen({super.key, required this.user, this.i});
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(Profilecontroler());
@@ -25,10 +26,14 @@ class chatuserProfilescreen extends StatelessWidget {
           title: Text("${user.name}"),
           leading: IconButton(
               onPressed: () {
-                Get.off(() => homepage(), transition: Transition.zoom);
+                Get.off(
+                    () => Chatpage(
+                          user: user,
+                        ),
+                    transition: Transition.zoom);
               },
               icon: Icon(
-                Icons.home,
+                Icons.arrow_back_ios,
                 color: Colors.white,
               )),
         ),

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 
 import '../../color/Color.dart';
 import '../../model/homepage/homepagemodel.dart';
+import '../../view/homepage/ui/profilealerbox.dart';
 import '../widgets.dart';
 
 class chatcard extends StatelessWidget {
@@ -51,22 +52,30 @@ class chatcard extends StatelessWidget {
               log("No documents found or the first document does not exist.");
             }
             return ListTile(
-              leading: CircleAvatar(
-                child: CachedNetworkImage(
-                  imageUrl: user.image ?? Commonwidgets.imageurl,
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.531),
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover),
+              leading: GestureDetector(
+                onTap: () {
+                  Get.defaultDialog(
+                      title: "${user.name}",
+                      backgroundColor: whiteColor,
+                      content: ProfileAlertbox(user: user));
+                },
+                child: CircleAvatar(
+                  child: CachedNetworkImage(
+                    imageUrl: user.image ?? Commonwidgets.imageurl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.531),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
                     ),
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Center(child: Icon(Icons.error)),
                   ),
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.error)),
                 ),
               ),
               // leading: CircleAvatar(

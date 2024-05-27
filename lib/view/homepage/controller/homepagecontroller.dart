@@ -18,7 +18,7 @@ class HomepageController extends GetxController {
   @override
   void onInit() {
     Apis.getselfinfo();
-    Apis.updateonlineststus(true);
+    // Apis.updateonlineststus(true);
     SystemChannels.lifecycle.setMessageHandler((message) {
       log("message of ${message}");
       log("res${Apis.auth.currentUser}");

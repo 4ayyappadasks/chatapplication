@@ -6,12 +6,14 @@ import 'package:chatapplication/model/chatpage/chatpagemodel.dart';
 import 'package:chatapplication/model/homepage/homepagemodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class Apis {
   static FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static FirebaseStorage Storage = FirebaseStorage.instance;
+  static FirebaseMessaging messaging = FirebaseMessaging.instance;
   static User get user => auth.currentUser!;
 
   /// user exist
@@ -32,6 +34,9 @@ class Apis {
         .then((user) async {
       if (user.exists) {
         me = Chatusers.fromJson(user.data()!);
+        await getfirbasemessagingtoken();
+        Apis.updateonlineststus(true);
+        updateonlineststus(true);
         log("getself info ${user.data()}");
       } else {
         await Createuser().then((value) => getselfinfo());
@@ -182,7 +187,28 @@ class Apis {
   static Future<void> updateonlineststus(bool isonline) async {
     firestore.collection('user').doc(user.uid).update({
       "is_online": isonline,
-      "last_active": DateTime.now().millisecondsSinceEpoch.toString()
+      "last_active": DateTime.now().millisecondsSinceEpoch.toString(),
+      "push_Token": me.pushToken,
+    });
+  }
+
+  ///*************************************/// get firebase notification
+  static Future<void> getfirbasemessagingtoken() async {
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    await messaging.getToken().then((value) {
+      log("messagesssssssssssssssssssssss${value}");
+      if (value != null) {
+        me.pushToken = value;
+        log("fcm token${value}");
+      }
     });
   }
 }
