@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 
 class Apis {
   static FirebaseAuth auth = FirebaseAuth.instance;
@@ -210,5 +211,43 @@ class Apis {
         log("fcm token${value}");
       }
     });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      log('Got a message whilst in the foreground!');
+      log('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        log('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  /// send push notification
+  static Future<void> sendpushnotification(
+      Chatusers chatusers, String message) async {
+    //var url = Uri.https('example.com', 'whatsit/create');
+    log("messageiii:${message}");
+    final body = {
+      "message": {
+        'token': chatusers.pushToken,
+        "notification": {
+          "title": "${chatusers.name}",
+          "body": "${message}",
+        }
+      },
+      // "data": {
+      //   "some_data": "User ID:${me.id}",
+      // },
+    };
+    var response = await http.post(
+        Uri.parse(
+            "https://fcm.googleapis.com/v1/projects/chat-us-41c60/messages:send"),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:
+              "Bearer ya29.a0AXooCguT0A8vyZnSPWCCi6tBVc3sSDZbYGVQTY5z6oO6Es8uON2Cf7vu2xDuM0JLbEfArtsZFkhYPtD149Rf8AOxWP3Zq7r1CqN-9A8Y9H75S9Kzzn5oS7X4aO9pT62dMYfoo_ltOoGMzwD24r5TWI4b4kjD-TGPHG-9aCgYKAVcSARISFQHGX2MinECezd0oNjXCFmEth79enw0171"
+        },
+        body: jsonEncode(body));
+    log('Response status: ${response.statusCode}');
+    log('Response body: ${response.body}');
   }
 }

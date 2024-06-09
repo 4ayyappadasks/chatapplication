@@ -10,6 +10,8 @@ const Color alertcolor = Color(0xFFFF0000);
 
 const Color darkcolor = Color(0xFF000000);
 
+const Color lightcolor = Color(0xFF9D9999);
+
 const Color messagerecivecolor = Color(0xFF2BA4A4);
 
 const Color messagesentcolor = Color(0xFF1A6060);

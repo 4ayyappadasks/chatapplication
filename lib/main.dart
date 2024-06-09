@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:chatapplication/color/Color.dart';
 import 'package:chatapplication/firebase_options.dart';
 import 'package:chatapplication/view/splashscreen/ui/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
+import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -11,10 +16,8 @@ void main() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((value) async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+      .then((value) {
+    _intelizefirebase();
     runApp(const MyApp());
   });
 }
@@ -63,4 +66,22 @@ class MyApp extends StatelessWidget {
       home: const Splashscreen(),
     );
   }
+}
+
+_intelizefirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  var result = await FlutterNotificationChannel().registerNotificationChannel(
+    description: 'For showing messages',
+    id: 'chats',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'Chats',
+    visibility: NotificationVisibility.VISIBILITY_PUBLIC,
+    allowBubbles: true,
+    enableVibration: true,
+    enableSound: true,
+    showBadge: true,
+  );
+  log(result);
 }

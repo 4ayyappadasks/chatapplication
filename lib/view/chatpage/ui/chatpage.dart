@@ -291,6 +291,7 @@ class Chatpage extends StatelessWidget {
                           onPressed: () {
                             if (msg.text.isNotEmpty) {
                               Apis.sendmessages(user, msg.text, Type.text);
+                              Apis.sendpushnotification(user, msg.text);
                               msg.text = "";
                             }
                           },
