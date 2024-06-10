@@ -6,7 +6,13 @@ import 'package:chatapplication/color/Color.dart';
 import 'package:chatapplication/commonwidgets/time/date_changing.dart';
 import 'package:chatapplication/commonwidgets/widgets.dart';
 import 'package:chatapplication/model/chatpage/chatpagemodel.dart';
+import 'package:chatapplication/view/chatpage/controller.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:saver_gallery/saver_gallery.dart';
+import 'package:uuid/uuid.dart';
 
 class MessageCard extends StatelessWidget {
   final Messages message;
@@ -15,6 +21,7 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.find<Chatcontroller>();
     bool isme = Apis.user.uid == message.fromid;
     return InkWell(
       onLongPress: () {
@@ -33,9 +40,45 @@ class MessageCard extends StatelessWidget {
                   color: darkcolor,
                 ),
                 message.type == Type.text
-                    ? _OptionItem(Icon(Icons.copy_all), "Copy message", () {})
+                    ? _OptionItem(Icon(Icons.copy_all), "Copy message",
+                        () async {
+                        await Clipboard.setData(
+                                ClipboardData(text: message.msg))
+                            .then((value) {
+                          Get.back();
+                          Commonwidgets.show(context,
+                              message: "message captured", content: "");
+                        });
+                      })
                     : _OptionItem(
-                        Icon(Icons.download), "Download Image", () {}),
+                        Icon(Icons.download),
+                        "Download Image",
+                        () async {
+                          var response = await Dio().get("${message.msg}",
+                              options:
+                                  Options(responseType: ResponseType.bytes));
+                          // Generate a unique UUID for the image
+                          Uuid uuid = Uuid();
+                          String picturesPath =
+                              "wechat${uuid.v4()}.jpg"; // Use the UUID as part of the filename
+                          debugPrint(picturesPath);
+                          final result = await SaverGallery.saveImage(
+                                  Uint8List.fromList(response.data),
+                                  quality: 60,
+                                  name: picturesPath,
+                                  androidRelativePath:
+                                      "Pictures/aa/wechat/images",
+                                  androidExistNotSave: true)
+                              .then((value) {
+                            Get.back();
+                            Commonwidgets.show(context,
+                                color: darkcolor,
+                                content: "",
+                                message: "Image Saved Successfully");
+                          }); // Set to true to avoid saving if the file exists
+                          debugPrint(result.toString());
+                        },
+                      ),
                 Divider(
                   endIndent: MediaQuery.of(context).size.width * .005,
                   indent: MediaQuery.of(context).size.width * .005,
@@ -44,10 +87,24 @@ class MessageCard extends StatelessWidget {
                   color: lightcolor,
                 ),
                 (message.type == Type.text && isme == true)
-                    ? _OptionItem(Icon(Icons.edit), "Edit message", () {})
+                    ? _OptionItem(Icon(Icons.edit), "Edit message", () {
+                        controller.editedmsg = message;
+                        controller.edtmsg.text = message.msg;
+                        Get.back();
+                        controller.editmessage.value = true;
+                      })
                     : SizedBox(),
                 (isme == true)
-                    ? _OptionItem(Icon(Icons.delete), "Delete message", () {})
+                    ? _OptionItem(Icon(Icons.delete), "Delete message",
+                        () async {
+                        await Apis.deletemessage(message).then((value) {
+                          Get.back();
+                          Commonwidgets.show(context,
+                              message: "message deleted",
+                              content: "",
+                              color: darkcolor);
+                        });
+                      })
                     : SizedBox(),
                 (isme == true)
                     ? Divider(
@@ -60,13 +117,13 @@ class MessageCard extends StatelessWidget {
                     : SizedBox(),
                 _OptionItem(
                     Icon(Icons.visibility),
-                    "Sent at : ${Datechanging.getLastMessagetime(context: context, time: message.sent)}",
+                    "Sent at : ${Datechanging.getmessagetime(context: context, time: message.sent)}",
                     () {}),
                 _OptionItem(
                     Icon(Icons.visibility),
                     message.read.isEmpty
-                        ? "Message is Delivered but seen"
-                        : "Received at :  ${Datechanging.getLastMessagetime(context: context, time: message.read)}",
+                        ? "Message is Delivered but not seen"
+                        : "Received at :  ${Datechanging.getmessagetime(context: context, time: message.read)}",
                     () {}),
               ],
             ),
@@ -132,7 +189,7 @@ class MessageCard extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(15),
-          child: Text(Datechanging.Getformated_Date(
+          child: Text(Datechanging.getformated_Date(
               context: context, time: message.sent)),
         )
       ],
@@ -148,7 +205,7 @@ class MessageCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(15),
-              child: Text(Datechanging.Getformated_Date(
+              child: Text(Datechanging.getformated_Date(
                   time: message.sent, context: context)),
             ),
             if (message.read.isNotEmpty)

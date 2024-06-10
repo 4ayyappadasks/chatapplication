@@ -9,6 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import '../../model/chatpage/chatpagemodel.dart';
 
 class Chatcontroller extends GetxController {
+  final edtmsg = TextEditingController();
+  var editmessage = false.obs;
+  var editedmsg;
+  var editshowimoji = false.obs;
   var Lists = <Messages>[].obs;
   var message = "".obs;
   var showimoji = false.obs;
@@ -21,6 +25,11 @@ class Chatcontroller extends GetxController {
   emojipicker() {
     showimoji.value = !showimoji.value;
     print("imoji ${showimoji.value}");
+  }
+
+  edtemojipicker() {
+    editshowimoji.value = !editshowimoji.value;
+    print("imoji ${editshowimoji.value}");
   }
 
   ///camera

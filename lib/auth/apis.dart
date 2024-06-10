@@ -174,6 +174,27 @@ class Apis {
     }
   }
 
+  /// delete message
+
+  static Future<void> deletemessage(Messages messages) async {
+    firestore
+        .collection('chats/${getConverstioniD(messages.toid)}/messages/')
+        .doc(messages.sent)
+        .delete();
+    if (messages.type == Type.image)
+      await Storage.refFromURL(messages.msg).delete();
+  }
+
+  /// update message
+
+  static Future<void> updatemessage(
+      Messages messages, String? updatedmessage) async {
+    firestore
+        .collection('chats/${getConverstioniD(messages.toid)}/messages/')
+        .doc(messages.sent)
+        .update({"msg": updatedmessage});
+  }
+
   /// getuser info
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getuserinfo(

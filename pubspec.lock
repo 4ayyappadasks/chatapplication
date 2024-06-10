@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      sha256: "11e40df547d418cc0c4900a9318b26304e665da6fa4755399a9ff9efd09034b5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.3+1"
   emoji_picker_flutter:
     dependency: "direct main"
     description:
@@ -712,6 +720,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  saver_gallery:
+    dependency: "direct main"
+    description:
+      name: saver_gallery
+      sha256: fbd52d7b3095f6463faef3372a2d9c02e7a95af2b1cc7493494f19174b422b2b
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.5"
   shared_preferences:
     dependency: transitive
     description:

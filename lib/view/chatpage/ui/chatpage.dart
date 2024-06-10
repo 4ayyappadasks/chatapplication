@@ -243,67 +243,120 @@ class Chatpage extends StatelessWidget {
                       )
                     : SizedBox();
               }),
-              Card(
-                elevation: 5,
-                margin: EdgeInsets.only(right: 10, left: 10, top: 10),
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          controller.emojipicker();
-                        },
-                        icon: Icon(Icons.emoji_emotions_outlined)),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          onTap: () {
-                            if (controller.showimoji.value) {
-                              controller.emojipicker();
-                            }
-                          },
-                          controller: msg,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          decoration: InputDecoration(
+              Obx(() => controller.editmessage.value == false
+                  ? Card(
+                      elevation: 5,
+                      margin: EdgeInsets.only(right: 10, left: 10, top: 10),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                controller.emojipicker();
+                              },
+                              icon: Icon(Icons.emoji_emotions_outlined)),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                onTap: () {
+                                  if (controller.showimoji.value) {
+                                    controller.emojipicker();
+                                  }
+                                },
+                                controller: msg,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                      top: 10, bottom: 10, left: 10),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: primaryColor)),
+                                  hintText: "type your message......",
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                controller.pickImageFromGallery(context, user);
+                              },
+                              icon: Icon(Icons.image)),
+                          IconButton(
+                              onPressed: () {
+                                controller.pickimageusingcam(context, user);
+                              },
+                              icon: Icon(CupertinoIcons.camera)),
+                          CircleAvatar(
+                            child: IconButton(
+                                onPressed: () {
+                                  if (msg.text.isNotEmpty) {
+                                    Apis.sendmessages(
+                                        user, msg.text, Type.text);
+                                    Apis.sendpushnotification(user, msg.text);
+                                    msg.text = "";
+                                  }
+                                },
+                                icon: Icon(Icons.send)),
+                          )
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      child: TextFormField(
+                        controller: controller.edtmsg,
+                        decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.only(top: 10, bottom: 10, left: 10),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: primaryColor)),
-                            hintText: "type your message......",
-                          ),
-                        ),
+                            border: OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(),
+                            prefixIcon: IconButton(
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus();
+                                  controller.edtemojipicker();
+                                },
+                                icon: Icon(Icons.emoji_emotions_outlined)),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  controller.editmessage.value = false;
+                                  Apis.updatemessage(controller.editedmsg,
+                                      "${controller.edtmsg.text}");
+                                },
+                                icon: CircleAvatar(
+                                  child: Icon(Icons.send),
+                                ))),
                       ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          controller.pickImageFromGallery(context, user);
-                        },
-                        icon: Icon(Icons.image)),
-                    IconButton(
-                        onPressed: () {
-                          controller.pickimageusingcam(context, user);
-                        },
-                        icon: Icon(CupertinoIcons.camera)),
-                    CircleAvatar(
-                      child: IconButton(
-                          onPressed: () {
-                            if (msg.text.isNotEmpty) {
-                              Apis.sendmessages(user, msg.text, Type.text);
-                              Apis.sendpushnotification(user, msg.text);
-                              msg.text = "";
-                            }
-                          },
-                          icon: Icon(Icons.send)),
-                    )
-                  ],
-                ),
-              ),
+                    )),
               Obx(() => controller.showimoji.value
                   ? EmojiPicker(
                       textEditingController:
                           msg, // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
+                      config: Config(
+                        height: MediaQuery.of(context).size.height * .4,
+                        checkPlatformCompatibility: true,
+                        emojiViewConfig: EmojiViewConfig(
+                          // Issue: https://github.com/flutter/flutter/issues/28894
+                          emojiSizeMax: 28 *
+                              (foundation.defaultTargetPlatform ==
+                                      TargetPlatform.iOS
+                                  ? 1.20
+                                  : 1.0),
+                        ),
+                        swapCategoryAndBottomBar: false,
+                        skinToneConfig: const SkinToneConfig(),
+                        categoryViewConfig: const CategoryViewConfig(),
+                        bottomActionBarConfig: const BottomActionBarConfig(),
+                        searchViewConfig: const SearchViewConfig(),
+                      ),
+                    )
+                  : SizedBox()),
+              Obx(() => controller.editshowimoji.value
+                  ? EmojiPicker(
+                      textEditingController: controller
+                          .edtmsg, // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
                       config: Config(
                         height: MediaQuery.of(context).size.height * .4,
                         checkPlatformCompatibility: true,

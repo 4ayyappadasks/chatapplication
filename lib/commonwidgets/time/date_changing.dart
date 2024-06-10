@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Datechanging {
-  static String Getformated_Date(
+  static String getformated_Date(
       {required BuildContext context, required String time}) {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     return TimeOfDay.fromDateTime(date).format(context);
@@ -71,5 +71,20 @@ class Datechanging {
         return "Dec";
     }
     return "NA";
+  }
+
+  static String getmessagetime(
+      {required BuildContext context, required String time}) {
+    final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
+    final DateTime now = DateTime.now();
+    String formateditime = TimeOfDay.fromDateTime(sent).format(context);
+    if (now.day == sent.day &&
+        now.month == sent.month &&
+        now.year == sent.year) {
+      return formateditime;
+    }
+    return now.year == sent.year
+        ? "${formateditime} - ${sent.day} - ${getmonth(sent)}"
+        : "${formateditime} - ${sent.day} - ${getmonth(sent)}  ${sent.year}";
   }
 }

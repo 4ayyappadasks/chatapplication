@@ -63,4 +63,31 @@ class Commonwidgets {
       isScrollControlled: iscontrolled ?? false,
     );
   }
+
+  static void show(
+    BuildContext context, {
+    String? message,
+    String? content,
+    Color? color,
+  }) {
+    final displayMessage = message ?? 'Default Message';
+    final displayContent = content ?? 'Default Content';
+    final displayColor = color ?? darkcolor;
+
+    final snackBar = SnackBar(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (displayMessage.isNotEmpty)
+            Text(displayMessage, style: TextStyle(fontWeight: FontWeight.bold)),
+          if (displayContent.isNotEmpty) Text(displayContent),
+        ],
+      ),
+      backgroundColor: displayColor,
+    );
+
+    // Show the SnackBar
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }
