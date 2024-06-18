@@ -90,4 +90,41 @@ class Commonwidgets {
     // Show the SnackBar
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  static void showAlertBoxmemberadd({
+    required BuildContext context,
+    String? message,
+    IconData? icon, // Add an icon parameter
+    Color? bgcolor,
+    List<Widget>? actionbuttons,
+    bool? barrierDismissible,
+    Widget? contentmessage,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible ?? false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgcolor ?? Colors.white,
+          contentPadding: EdgeInsets.only(
+              left: 24, right: 24, bottom: 24), // Adjust content padding
+          title: Row(
+            children: [
+              if (icon != null) Icon(icon), // Display icon if provided
+              if (icon != null)
+                SizedBox(width: 8), // Add some space between icon and text
+              Expanded(
+                child: Text(
+                  message ?? 'Alert',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: contentmessage ?? Container(),
+          actions: actionbuttons,
+        );
+      },
+    );
+  }
 }

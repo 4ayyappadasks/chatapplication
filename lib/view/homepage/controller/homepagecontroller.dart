@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chatapplication/auth/apis.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +10,7 @@ import '../../../model/homepage/homepagemodel.dart';
 class HomepageController extends GetxController {
   /// store all user
   var List = <Chatusers>[].obs;
+  final email = TextEditingController();
 
   /// store searching users
   var SearchList = <Chatusers>[].obs;

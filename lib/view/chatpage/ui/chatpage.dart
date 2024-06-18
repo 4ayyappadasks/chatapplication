@@ -292,8 +292,13 @@ class Chatpage extends StatelessWidget {
                             child: IconButton(
                                 onPressed: () {
                                   if (msg.text.isNotEmpty) {
-                                    Apis.sendmessages(
-                                        user, msg.text, Type.text);
+                                    if (controller.Lists.isEmpty) {
+                                      Apis.sendfirstmessage(
+                                          user, msg.text, Type.text);
+                                    } else {
+                                      Apis.sendmessages(
+                                          user, msg.text, Type.text);
+                                    }
                                     Apis.sendpushnotification(user, msg.text);
                                     msg.text = "";
                                   }
