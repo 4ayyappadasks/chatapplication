@@ -13,4 +13,4 @@ Chat Us is a real-time chat application built using Flutter. It leverages GetX f
 
   ![image alt](https://github.com/4ayyappadasks/chatapplication/blob/ac9b9ffb525b359ff3c7bc7562641707ca57dd2f/CHat%20us%20(1).png)
 
-  ![image alt](https://github.com/4ayyappadasks/chatapplication/blob/ac9b9ffb525b359ff3c7bc7562641707ca57dd2f/CHat%20us%20(1).png)
+  ![image alt](https://github.com/4ayyappadasks/chatapplication/blob/60334406a6d6307963c24a87e6a94062f4eabe46/CHat%20us%20(2).png)
