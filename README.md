@@ -12,5 +12,6 @@ Chat Us is a real-time chat application built using Flutter. It leverages GetX f
 - **Auto Sign-In**: Automatic login using Google account after initial sign-in.
 
 - ![splash screen](https://github.com/user-attachments/assets/64a7b797-5544-43fa-9026-ef52fb0ef912)
+- https://github.com/4ayyappadasks/chatapplication/blob/adb5621614e5cdcb54ab95d29f0e2294087d9c52/images/google.png
 
 
