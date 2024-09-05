@@ -10,6 +10,7 @@ class Commonwidgets {
 
   static String imageurl =
       "https://images.unsplash.com/photo-1549740425-5e9ed4d8cd34?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   static void Getalertbox(
     String message,
     Color? bgcolor,
@@ -106,8 +107,8 @@ class Commonwidgets {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: bgcolor ?? Colors.white,
-          contentPadding: EdgeInsets.only(
-              left: 24, right: 24, bottom: 24), // Adjust content padding
+          contentPadding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
+          // Adjust content padding
           title: Row(
             children: [
               if (icon != null) Icon(icon), // Display icon if provided

@@ -2,6 +2,14 @@ import 'dart:ui';
 
 const Color primaryColor = Color(0xFF0D0D58);
 
+const Color gradprimaryColor = Color(0xFF8080EF);
+
+const Color grad2primaryColor = Color(0xFF1C1C38);
+
+const Color grad3primaryColor = Color(0xFFB3B3EA);
+
+const Color grad4primaryColor = Color(0xFFCBCBEE);
+
 const Color secondaryColor = Color(0xFFE7CC4D);
 
 const Color whiteColor = Color(0xFFFFFFFF);

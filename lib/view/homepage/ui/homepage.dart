@@ -31,64 +31,145 @@ class homepage extends StatelessWidget {
           }
         },
         child: Scaffold(
-            appBar: AppBar(
-              surfaceTintColor: whiteColor,
-              backgroundColor: primaryColor,
-              centerTitle: true,
-              title: Obx(() => controller.issearching.value == true
-                  ? TextFormField(
-                      onChanged: (value) {
-                        controller.SearchList.clear();
-                        for (var i in controller.List.value) {
-                          if (i.name!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()) ||
-                              i.email!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase())) {
-                            controller.SearchList.add(i);
-                          }
-                          ;
-                        }
-                        log("message${controller.SearchList.length}mes${controller.List.length}");
-                      },
-                      decoration: InputDecoration(
-                          hintText: "search hear",
-                          hintStyle: TextStyle(
+            appBar: PreferredSize(
+                preferredSize: Size(
+                    double.infinity, MediaQuery.of(context).size.height * .25),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .15,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          grad2primaryColor,
+                          primaryColor,
+                          grad2primaryColor,
+                        ]),
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Get.off(
+                                  () => Profilescreen(
+                                        user: Apis.me,
+                                      ),
+                                  transition: Transition.zoom);
+                            },
+                            icon: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            )),
+                        Obx(() => controller.issearching.value == true
+                            ? Expanded(
+                                child: TextFormField(
+                                  onChanged: (value) {
+                                    controller.SearchList.clear();
+                                    for (var i in controller.List.value) {
+                                      if (i.name!
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase()) ||
+                                          i.email!
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase())) {
+                                        controller.SearchList.add(i);
+                                      }
+                                      ;
+                                    }
+                                    log("message${controller.SearchList.length}mes${controller.List.length}");
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "search hear",
+                                      hintStyle: TextStyle(
+                                        color: whiteColor,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: whiteColor)),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      fillColor: primaryColor,
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: whiteColor))),
+                                ),
+                              )
+                            : Text(
+                                "ChAt Us",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: whiteColor,
+                                    fontSize: 20),
+                              )),
+                        Obx(() => IconButton(
                             color: whiteColor,
-                          ),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: whiteColor)),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          fillColor: primaryColor,
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: whiteColor))),
-                    )
-                  : Text("ChAt Us")),
-              leading: IconButton(
-                  onPressed: () {
-                    Get.off(
-                        () => Profilescreen(
-                              user: Apis.me,
-                            ),
-                        transition: Transition.zoom);
-                  },
-                  icon: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  )),
-              actions: [
-                Obx(() => IconButton(
-                    onPressed: () {
-                      controller.issearching.value =
-                          !controller.issearching.value;
-                    },
-                    icon: Icon(controller.issearching.value == true
-                        ? CupertinoIcons.clear_circled_solid
-                        : Icons.search))),
-              ],
-            ),
+                            onPressed: () {
+                              controller.issearching.value =
+                                  !controller.issearching.value;
+                            },
+                            icon: Icon(controller.issearching.value == true
+                                ? CupertinoIcons.clear_circled_solid
+                                : Icons.search))),
+                      ],
+                    ),
+                  ),
+                )),
+            // AppBar(
+            //   // title: Obx(() => controller.issearching.value == true
+            //   //     ? TextFormField(
+            //   //         onChanged: (value) {
+            //   //           controller.SearchList.clear();
+            //   //           for (var i in controller.List.value) {
+            //   //             if (i.name!
+            //   //                     .toLowerCase()
+            //   //                     .contains(value.toLowerCase()) ||
+            //   //                 i.email!
+            //   //                     .toLowerCase()
+            //   //                     .contains(value.toLowerCase())) {
+            //   //               controller.SearchList.add(i);
+            //   //             }
+            //   //             ;
+            //   //           }
+            //   //           log("message${controller.SearchList.length}mes${controller.List.length}");
+            //   //         },
+            //   //         decoration: InputDecoration(
+            //   //             hintText: "search hear",
+            //   //             hintStyle: TextStyle(
+            //   //               color: whiteColor,
+            //   //             ),
+            //   //             border: OutlineInputBorder(
+            //   //                 borderSide: BorderSide(color: whiteColor)),
+            //   //             contentPadding: EdgeInsets.symmetric(
+            //   //                 vertical: 10, horizontal: 10),
+            //   //             fillColor: primaryColor,
+            //   //             focusedBorder: OutlineInputBorder(
+            //   //                 borderSide: BorderSide(color: whiteColor))),
+            //   //       )
+            //   //     : Text("ChAt Us")),
+            //   // leading: IconButton(
+            //   //     onPressed: () {
+            //   //       Get.off(
+            //   //           () => Profilescreen(
+            //   //                 user: Apis.me,
+            //   //               ),
+            //   //           transition: Transition.zoom);
+            //   //     },
+            //   //     icon: Icon(
+            //   //       Icons.person,
+            //   //       color: Colors.white,
+            //   //     )),
+            //   // actions: [
+            //   //   Obx(() => IconButton(
+            //   //       onPressed: () {
+            //   //         controller.issearching.value =
+            //   //             !controller.issearching.value;
+            //   //       },
+            //   //       icon: Icon(controller.issearching.value == true
+            //   //           ? CupertinoIcons.clear_circled_solid
+            //   //           : Icons.search))),
+            //   // ],
+            // ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 Commonwidgets.showAlertBoxmemberadd(

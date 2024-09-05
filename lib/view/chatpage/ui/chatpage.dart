@@ -42,8 +42,8 @@ class Chatpage extends StatelessWidget {
         },
         child: Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size(
-                double.infinity, MediaQuery.of(context).size.height * 0.08),
+            preferredSize:
+                Size(double.infinity, MediaQuery.of(context).size.height * .25),
             child: GestureDetector(
               onTap: () {
                 Get.off(() => chatuserProfilescreen(user: user));
@@ -55,74 +55,80 @@ class Chatpage extends StatelessWidget {
                   final list =
                       data?.map((e) => Chatusers.fromJson(e.data())).toList() ??
                           [];
-                  return Container(
-                    padding: EdgeInsets.only(top: 10),
-                    color: primaryColor, // Replace with your primaryColor
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                            onPressed: () {
-                              Get.off(() => homepage(),
-                                  transition: Transition.fade);
-                            },
-                            icon: Icon(
-                              CupertinoIcons.back,
-                              color: Colors.white,
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            grad2primaryColor,
+                            primaryColor,
+                            grad2primaryColor,
+                          ]),
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              onPressed: () {
+                                Get.off(() => homepage(),
+                                    transition: Transition.fade);
+                              },
+                              icon: Icon(
+                                CupertinoIcons.back,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                        Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: list.isNotEmpty
-                                    ? CachedNetworkImageProvider(
-                                        list[0].image ?? "")
-                                    : CachedNetworkImageProvider(
-                                        user.image ?? ""),
-                                onBackgroundImageError:
-                                    (exception, stackTrace) {
-                                  // Handle image error
-                                },
-                              ),
-                              SizedBox(
-                                  width:
-                                      8), // Adjust the space between avatar and text
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    list.isNotEmpty
-                                        ? "${list[0].name}"
-                                        : "${user.name}",
-                                    style: TextStyle(color: Colors.white),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  maxRadius:
+                                      MediaQuery.of(context).size.height * .05,
+                                  minRadius:
+                                      MediaQuery.of(context).size.height * .02,
+                                  backgroundImage: list.isNotEmpty
+                                      ? CachedNetworkImageProvider(
+                                          list[0].image ?? "")
+                                      : CachedNetworkImageProvider(
+                                          user.image ?? ""),
+                                  onBackgroundImageError:
+                                      (exception, stackTrace) {
+                                    // Handle image error
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  list.isNotEmpty
+                                      ? "${list[0].name}"
+                                      : "${user.name}",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Text(
+                                  (list.isNotEmpty)
+                                      ? (list[0].isOnline!)
+                                          ? "Online"
+                                          : Datechanging.getlastactivetime(
+                                              context: context,
+                                              lastactive:
+                                                  "${list[0].lastActive}")
+                                      : Datechanging.getlastactivetime(
+                                          context: context,
+                                          lastactive: "${user.lastActive}"),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),
-                                  Text(
-                                    (list.isNotEmpty)
-                                        ? (list[0].isOnline!)
-                                            ? "Online"
-                                            : Datechanging.getlastactivetime(
-                                                context: context,
-                                                lastactive:
-                                                    "${list[0].lastActive}")
-                                        : Datechanging.getlastactivetime(
-                                            context: context,
-                                            lastactive: "${user.lastActive}"),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -204,16 +210,8 @@ class Chatpage extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 15),
                                 physics: BouncingScrollPhysics(),
                                 itemCount: controller.Lists.length,
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                  onTap: () {
-                                    // Get.off(() => Chatpage(
-                                    //       user: controller.List[index],
-                                    //     ));
-                                  },
-                                  child: MessageCard(
-                                    message: controller.Lists[index],
-                                  ),
+                                itemBuilder: (context, index) => MessageCard(
+                                  message: controller.Lists[index],
                                 ),
                                 reverse: true,
                               ));

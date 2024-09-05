@@ -26,56 +26,83 @@ class Profilescreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: whiteColor,
-          backgroundColor: primaryColor,
-          centerTitle: true,
-          title: Text("ProfileScreen"),
-          leading: IconButton(
-              onPressed: () {
-                Get.off(() => homepage(), transition: Transition.zoom);
-              },
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              )),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Commonwidgets.Getalertbox(
-                      "do you want to log out",
-                      whiteColor,
-                      [
-                        ElevatedButton(
-                            onPressed: () async {
-                              await Apis.updateonlineststus(false);
-                              await FirebaseAuth.instance.signOut();
-                              await GoogleSignIn().signOut();
-                              Commonwidgets.GetSnackbar(
-                                  "logout",
-                                  "${user.name} logged out",
-                                  whiteColor,
-                                  null,
-                                  NetworkImage(user.image ?? ""),
-                                  context);
-                              Get.off(() => loginpage(),
-                                  transition: Transition.upToDown);
-                              Apis.auth = FirebaseAuth.instance;
-                            },
-                            child: Text("yes")),
-                        ElevatedButton(
-                            onPressed: () async {
-                              Get.back();
-                            },
-                            child: Text("no"))
-                      ],
-                      true,
-                      context,
-                      Text(""));
-                },
-                icon: Icon(Icons.login))
-          ],
-        ),
+        appBar: PreferredSize(
+            preferredSize:
+                Size(double.infinity, MediaQuery.of(context).size.height * .25),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * .15,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      grad2primaryColor,
+                      primaryColor,
+                      grad2primaryColor,
+                    ]),
+                    borderRadius: BorderRadius.all(Radius.circular(25))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Get.off(() => homepage(),
+                              transition: Transition.zoom);
+                        },
+                        icon: Icon(
+                          Icons.home,
+                          color: whiteColor,
+                        )),
+                    Spacer(),
+                    Text(
+                      "P r O f I l E",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: whiteColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Spacer(),
+                    IconButton(
+                        color: whiteColor,
+                        onPressed: () {
+                          Commonwidgets.Getalertbox(
+                              "do you want to log out",
+                              whiteColor,
+                              [
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      await Apis.updateonlineststus(false);
+                                      await FirebaseAuth.instance.signOut();
+                                      await GoogleSignIn().signOut();
+                                      Commonwidgets.GetSnackbar(
+                                          "logout",
+                                          "${user.name} logged out",
+                                          whiteColor,
+                                          null,
+                                          NetworkImage(user.image ?? ""),
+                                          context);
+                                      Get.off(() => loginpage(),
+                                          transition: Transition.upToDown);
+                                      Apis.auth = FirebaseAuth.instance;
+                                    },
+                                    child: Text("yes")),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      Get.back();
+                                    },
+                                    child: Text("no"))
+                              ],
+                              true,
+                              context,
+                              Text(""));
+                        },
+                        icon: Icon(
+                          Icons.login,
+                        ))
+                  ],
+                ),
+              ),
+            )),
         body: Form(
           key: formkey,
           child: SingleChildScrollView(
