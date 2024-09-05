@@ -131,13 +131,15 @@ class homepage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return StreamBuilder(
-                    stream: Apis.Getalluser(
-                        snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                    stream: (snapshot.data?.docs.isNotEmpty ?? false)
+                        ? Apis.Getalluser(
+                            snapshot.data?.docs.map((e) => e.id).toList() ?? [])
+                        : null,
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                         case ConnectionState.none:
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text("no chat yet"));
                         case ConnectionState.active:
                         case ConnectionState.done:
                           final data = snapshot.data?.docs;

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../ui/Loginpage.dart';
+
 class Loginpagecontroll extends GetxController {
   Future<UserCredential?> signInWithGoogle(BuildContext context) async {
     try {
@@ -64,12 +66,18 @@ class Loginpagecontroll extends GetxController {
           context,
         );
       } else {
-        Get.to(() => homepage());
+        Get.to(() => loginpage());
       }
     });
     // } catch (e) {
     //   // Handle sign-in errors
     //   print("Error signing in with Google: $e");
     // }
+  }
+
+  /// toggle passs
+  var passvisible = false.obs;
+  togglepass() {
+    passvisible.value = !passvisible.value;
   }
 }

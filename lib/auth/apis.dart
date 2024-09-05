@@ -23,7 +23,7 @@ class Apis {
         .exists;
   }
 
-  /// user exist
+  /// user add user
   static Future<bool> addchatuser(String email) async {
     final data = await firestore
         .collection("user")
@@ -47,6 +47,73 @@ class Apis {
 
   /// store user name
   static late Chatusers me;
+  // Login user with email and password
+  static Future<void> loginWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      // Sign in user with email and password
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: "jiji@gmail.com", password: "password");
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Update user status in Firestore
+        await updateUserStatus(user, true);
+        print("User logged in successfully: ${user.email}");
+      }
+    } catch (e) {
+      print("Error during login: $e");
+    }
+  }
+
+  // Update user status in Firestore
+  static Future<void> updateUserStatus(User user, bool isOnline) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    await firestore.collection("user").doc(user.uid).update({
+      'isOnline': isOnline,
+      'lastActive': time,
+    });
+  }
+
+  static Future<void> registerWithEmailAndPassword(
+      String email, String password, String displayName) async {
+    try {
+      // Create user with email and password
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Update the display name
+        await user.updateProfile(displayName: displayName);
+        await user.reload();
+        user = auth.currentUser;
+
+        // Create user in Firestore
+        await createUserInFirestore(user);
+      }
+    } catch (e) {
+      print("Error during registration: $e");
+    }
+  }
+
+// Create user document in Firestore
+  static Future<void> createUserInFirestore(User? user) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final chatUser = Chatusers(
+        id: user?.uid,
+        name: user?.displayName ?? "Unknown",
+        image: user?.photoURL ?? "",
+        email: user?.email ?? "No email",
+        createdAt: time,
+        about: "using a chat",
+        isOnline: false,
+        lastActive: time,
+        pushToken: "");
+
+    await firestore.collection("user").doc(user?.uid).set(chatUser.toJson());
+  }
 
   /// user info
   static Future<void> getselfinfo() async {
